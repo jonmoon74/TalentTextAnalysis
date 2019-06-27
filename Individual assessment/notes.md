@@ -11,3 +11,5 @@
   6. Talent percentage of total dev areas
 4. slice dataframe to userid, name and percentages
 5. save dataframe as excel file
+6. Compute variance in percentage points between strengths and dev areas as readiness indicator
+7. What percentage of talent words equals a talent
