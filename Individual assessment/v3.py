@@ -6,12 +6,13 @@ excWords = excludedWordsDF['WORDS'].tolist()
 potentialWordsDF = pd.read_csv("testWords.csv")
 potWords = potentialWordsDF['WORDS'].tolist()
 mainData = pd.read_excel("Talent data for analysis.xlsx")
+mainData = mainData.head(10)
 
 
 # set up function for processing mainData
 def textAnalysis(axis):
-    strengths = mainData['Strengths']
-    devAreas = mainData['Development Areas']
+    strengths = str(mainData['Strengths'])
+    devAreas = str(mainData['Development Areas'])
     marker = ""
     readyMarker = ""
 # missing an iterable here to co-join the for loops or do we?????
@@ -28,7 +29,10 @@ def textAnalysis(axis):
         else:
             sCheckWordsCount += 1
         fullCount = potWordsCount + sCheckWordsCount
-        strengthDensity = round(((potWordsCount / fullCount) * 100), 2)
+        if fullCount != 0:
+            strengthDensity = round(((potWordsCount / fullCount) * 100), 2)
+        else:
+            strengthDensity = 0
         mainData['Strengths Density'] = strengthDensity
 
     # analyse the development areas
@@ -45,7 +49,10 @@ def textAnalysis(axis):
         else:
             dCheckWordsCount += 1
         fullCount = potWordsCount + dCheckWordsCount
-        devAreaDensity = round(((potWordsCount / dCheckWordsCount) * 100), 2)
+        if fullCount != 0:
+            devAreaDensity = round(((potWordsCount / fullCount) * 100), 2)
+        else:
+            devAreaDensity = 0
         mainData['Development Areas Density'] = devAreaDensity
 
     # calculate talent status
@@ -69,6 +76,6 @@ def textAnalysis(axis):
 # need to return from the function
 
 
-pd.mainData.apply(textAnalysis(), axis=1)
+mainData.apply(textAnalysis, axis=1)
 
 print("Completed")
