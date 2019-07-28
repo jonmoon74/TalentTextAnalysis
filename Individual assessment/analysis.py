@@ -8,52 +8,54 @@ potWords = potentialWordsDF['WORDS'].tolist()
 mainData = pd.read_excel("Talent data for analysis.xlsx")
 mainData = mainData.head(10)
 
+mainData.set_index('Reference ID', inplace=True)
+index = mainData.index
 
-# set up function for processing mainData
-def textAnalysis(axis):
-    strengths = str(mainData['Strengths'])
-    devAreas = str(mainData['Development Areas'])
+for RID in index:
+    strengths = str(mainData.loc[RID, 'Strengths'])
+    devAreas = str(mainData.loc[RID, 'Development Areas'])
     marker = ""
     readyMarker = ""
-# missing an iterable here to co-join the for loops or do we?????
+    spotWordsCount = 0
+    sexcWordsCount = 0
+    sCheckWordsCount = 0
+    dpotWordsCount = 0
+    dexcWordsCount = 0
+    dCheckWordsCount = 0
+    # print("devAreas: " + devAreas)
+
     # analyse the strengths
     for word in strengths.split():
-        potWordsCount = 0
-        excWordsCount = 0
-        sCheckWordsCount = 0
         word = word.lower()
         if word in excWords:
-            excWordsCount += 1
+            sexcWordsCount += 1
         elif word in potWords:
-            potWordsCount += 1
+            spotWordsCount += 1
         else:
             sCheckWordsCount += 1
-        fullCount = potWordsCount + sCheckWordsCount
-        if fullCount != 0:
-            strengthDensity = round(((potWordsCount / fullCount) * 100), 2)
+        sfullCount = spotWordsCount + sCheckWordsCount
+        if sfullCount != 0:
+            strengthDensity = round(((spotWordsCount / sfullCount) * 100), 2)
         else:
             strengthDensity = 0
-        mainData['Strengths Density'] = strengthDensity
+        mainData.loc[RID, 'Strengths Density'] = strengthDensity
 
     # analyse the development areas
 
     for word in devAreas.split():
-        potWordsCount = 0
-        excWordsCount = 0
-        dCheckWordsCount = 0
         word = word.lower()
         if word in excWords:
-            excWordsCount += 1
+            dexcWordsCount += 1
         elif word in potWords:
-            potWordsCount += 1
+            dpotWordsCount += 1
         else:
             dCheckWordsCount += 1
-        fullCount = potWordsCount + dCheckWordsCount
-        if fullCount != 0:
-            devAreaDensity = round(((potWordsCount / fullCount) * 100), 2)
+        dfullCount = dpotWordsCount + dCheckWordsCount
+        if dfullCount != 0:
+            devAreaDensity = round(((dpotWordsCount / dfullCount) * 100), 2)
         else:
             devAreaDensity = 0
-        mainData['Development Areas Density'] = devAreaDensity
+        mainData.loc[RID, 'Development Areas Density'] = devAreaDensity
 
     # calculate talent status
     difference = strengthDensity - devAreaDensity
@@ -67,15 +69,13 @@ def textAnalysis(axis):
         marker = ""
         readyMarker = ""
 
-    mainData['Difference'] = difference
-    mainData['Potential Talent?'] = marker
-    mainData['Readiness'] = readyMarker
-
-    mainData.to_excel("results.xlsx")
-
-# need to return from the function
+    mainData.loc[RID, 'Difference'] = difference
+    mainData.loc[RID, 'Potential Talent?'] = marker
+    mainData.loc[RID, 'Readiness'] = readyMarker
 
 
-mainData.apply(textAnalysis, axis=1)
+# mainData.to_excel("results.xlsx")
+
+print(mainData)
 
 print("Completed")
