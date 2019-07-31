@@ -6,9 +6,11 @@ excWords = excludedWordsDF['WORDS'].tolist()
 potentialWordsDF = pd.read_csv("testWords.csv")
 potWords = potentialWordsDF['WORDS'].tolist()
 mainData = pd.read_excel("Talent data for analysis.xlsx")
+# remove next line for published version
 mainData = mainData.head(10)
 
 mainData.set_index('Reference ID', inplace=True)
+
 index = mainData.index
 
 for RID in index:
